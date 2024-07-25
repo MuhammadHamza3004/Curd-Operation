@@ -1,32 +1,46 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Create = () => {
-const [name,setName] = useState('')
-const [email,setEmail] = useState('')
+  const [formData , setFormData] =useState({})
+  const navigation= useNavigate()
+  const location = useLocation()
 
-const history= useNavigate()
 
 
-const handleSubmit = (event) => {
- 
-  event.preventDefault();
-  axios
-    .post("https://669e32ba9a1bda368005c884.mockapi.io/mockapi/Curdapi", {
-      name: name,
-      email: email,
-    })
-    .then(() =>{
-       history('/read')
-    })
+  const getdata = (e) => {
+    let {name,value}= e.target;
 
-   
-    setName('')
-    setEmail('')
-    console.log("clciekd");
-};
+   let input = {[name]:value}
+   setFormData({...formData,...input})
 
+  };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault()
+      axios.post("https://669e32ba9a1bda368005c884.mockapi.io/mockapi/Curdapi",
+      formData
+      )
+      .then(() =>{
+          alert("data,sent")
+          navigation("/read")
+        })
+        .catch((error)=>{
+          console.log(error,"error")
+        })
+       
+      };
+      
+      useEffect(()=>{
+        if(location?.state?.data){
+          setFormData(location?.state?.data)
+        }
+      },[formData])
+
+  console.log(formData.name)
+
+      
   return (
     <form className="container">
       <h1>Create</h1>
@@ -35,26 +49,28 @@ const handleSubmit = (event) => {
           Name
         </label>
         <input
-          type="text"
+          // type="text"
           className="form-control"
           aria-describedby="emailHelp"
-          value={name}
-          onChange={(e)=>setName(e.target.value)}
+          name="name"
+          value={formData.name}
+          onChange={(e) => getdata(e)}
         />
       </div>
       <div className="mb-3">
         <label className="form-label">Email</label>
-        <input type="text"
-         className="form-control"
-         value={email}
-         onChange={(e)=>setEmail(e.target.value)}
-         />
+        <input
+          // type="text"
+          className="form-control"
+          name="email"
+          value={formData.email}
+          onChange={(e) => getdata(e)}
+        />
       </div>
       <div className="mb-3 form-check"></div>
       <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
         Submit
       </button>
-      
     </form>
   );
 };

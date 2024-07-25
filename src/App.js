@@ -1,23 +1,44 @@
 import logo from './logo.svg';
 import './App.css';
 import { Create } from './component/create';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Read from './component/read';
+import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import Read from './component/Read';
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Create />
+  },
+  {
+    path: "/read",
+    element:<Read />
+  }
+])
+
 
 function App() {
   return (
-    <BrowserRouter>
-    <div className="App">
-    <Routes>
+     <>
+     {/* <Create /> */}
+     <RouterProvider router={router} />
+     </>
+
+
+
+    //   <BrowserRouter>
+    // <div className="App">
+    
+    // <Routes>
      
-      <Route path="/" element={<Create />} />
-      <Route path="/read" element={<Read />} />
+    //   <Route path="/" element={<Create />} />
+    //   <Route path="/read" element={<Read />} />
      
       
      
-    </Routes>
-    </div>
-    </BrowserRouter>
+    // </Routes>
+    // </div>
+    // </BrowserRouter>
   );
 }
 
